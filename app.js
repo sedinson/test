@@ -62,32 +62,6 @@ async.waterfall(
 			cb(null, app);
 		},
 
-		//-- App use modules
-		function (app, cb) {
-			//app.use(restify.CORS());
-			app.use(restify.fullResponse());
-			app.use(restify.acceptParser(app.acceptable));
-			app.use(restify.queryParser());
-            app.use(restify.gzipResponse());
-			app.use(
-				restify.bodyParser({
-					mapParams: false,
-					keepExtensions: true,
-					rejectUnknown: true,
-					uploadDir: config.uploadDir
-				})
-			);
-            app.use(
-                restify.throttle({
-                    rate: 25,
-                    burst: 50,
-                    ip: true
-                })
-            );
-
-			cb(null, app);
-		},
-
 		function (app, cb) {
 			app.get('/', function (req, res, next) {
 				console.log("Hola mundo!");
