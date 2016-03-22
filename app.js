@@ -160,7 +160,10 @@ async.waterfall(
 		},
 
 		function (app, cb) {
-			app.get('/', function (req, res) { res.send(200, {x: "online"}); });
+			app.get('/', function (req, res) {
+				console.log("Hola mundo!");
+				res.send(200, {x: "online"}); 
+			});
 			cb(null, app);
 		}
 	], function (err, app) {
