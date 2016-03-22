@@ -151,21 +151,21 @@ async.waterfall(
 			cb(null, app);
 		},
 
+		function (app, cb) {
+			app.get('/', function (req, res, next) {
+				console.log("Hola mundo!");
+				res.send({x: "online"}); 
+				return next();
+			});
+			cb(null, app);
+		},
+
 		//-- Start server
 		function (app, cb) {
 			console.log("Starting secure server...");
 			app.listen(3001, function (err) {
 				cb(err, app);
 			});
-		},
-
-		function (app, cb) {
-			app.get('/', function (req, res) {
-				console.log("Hola mundo!");
-				res.send(200, {x: "online"}); 
-				res.end();
-			});
-			cb(null, app);
 		}
 	], function (err, app) {
 		if (err) {
