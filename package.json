@@ -1,0 +1,25 @@
+{
+  "name": "royal-services",
+  "version": "1.0.0",
+  "description": "Royal Services API",
+  "main": "app.js",
+  "dependencies": {
+    "async": "^1.2.1",
+    "clone": "^1.0.2",
+    "extend": "^2.0.1",
+    "restify": "^3.0.3"
+  },
+  "devDependencies": {
+    "sqlite3": "^3.0.8"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "royal",
+    "services",
+    "api"
+  ],
+  "author": "Edinson Salas <edinsonsalas@gmail.com>",
+  "license": "ISC"
+}
