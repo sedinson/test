@@ -56,33 +56,7 @@ async.waterfall(
                 ciphers: "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4",
                 honorCipherOrder: true,
 				name: pkg.name,
-				version: pkg.version,
-				formatters: {
-					'application/json': function (req, res, body) {
-						if (body instanceof Error) {
-							res.statusCode = body.statusCode || 500;
-
-							body = {
-								success: false,
-								data: {
-									message: body.body? body.body.message : body.message
-								}
-							};
-						} else if (Buffer.isBuffer(body)) {
-							body = body.toString('base64');
-						} else {
-							body = {
-								success: true,
-								data: body.data? body.data : {}
-							};
-						}
-
-						var data = JSON.stringify(body);
-						res.setHeader('Content-Length', Buffer.byteLength(data));
-
-						return data;
-					}
-				}
+				version: pkg.version
 			});
 
 			cb(null, app);
@@ -110,43 +84,6 @@ async.waterfall(
                     ip: true
                 })
             );
-            app.use(
-                function crossOrigin(req, res, next) {
-                    if(config.app.server.allow.indexOf(req.headers.origin) >= 0) {
-                        res.header('Access-Control-Allow-Origin', req.headers.origin);
-                    } else {
-                        res.header('Access-Control-Allow-Origin', config.app.server.allow[0]);
-                    }
-
-                    return next();
-                }
-            );
-
-			cb(null, app);
-		},
-
-		//-- Method Not Allowed
-		function (app, cb) {
-			app.on('MethodNotAllowed', function(req, res) {
-				if (req.method.toLowerCase() === 'options') {
-					var allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Api-Version', 'Authorization'];
-
-					if (res.methods.indexOf('OPTIONS') === -1) res.methods.push('OPTIONS');
-
-					res.header('Access-Control-Allow-Headers', allowHeaders.join(', '));
-					res.header('Access-Control-Allow-Methods', res.methods.join(', '));
-
-                    if(config.app.server.allow.indexOf(req.headers.origin) >= 0) {
-                        res.header('Access-Control-Allow-Origin', req.headers.origin);
-                    } else {
-                        res.header('Access-Control-Allow-Origin', config.app.server.allow[0]);
-                    }
-
-					return res.send(204);
-				} else {
-					return res.send(new restify.MethodNotAllowedError());
-				}
-			});
 
 			cb(null, app);
 		},
