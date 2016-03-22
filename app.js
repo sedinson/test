@@ -163,6 +163,7 @@ async.waterfall(
 			app.get('/', function (req, res) {
 				console.log("Hola mundo!");
 				res.send(200, {x: "online"}); 
+				res.end();
 			});
 			cb(null, app);
 		}
