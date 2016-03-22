@@ -53,8 +53,6 @@ async.waterfall(
 			var app = restify.createServer({
                 certificate: fs.readFileSync(__dirname + '/ssl/certs/royal-films.crt'),
                 key: fs.readFileSync(__dirname + '/ssl/private/royal-films.key'),
-                ciphers: "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4",
-                honorCipherOrder: true,
 				name: pkg.name,
 				version: pkg.version
 			});
