@@ -12,6 +12,7 @@
    , constants = require('constants')
    , async = require('async')
    , restify = require('restify')
+  , helmet = require('helmet')
    , pkg = require(__dirname + '/package.json')
    , fs = require('fs')
  ;
@@ -53,15 +54,28 @@ async.waterfall(
 			var app = restify.createServer({
                 certificate: fs.readFileSync(__dirname + '/ssl/certs/royal-films.crt'),
                 key: fs.readFileSync(__dirname + '/ssl/private/royal-films.key'),
-ciphers: 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256',
-  honorCipherOrder: true,
 				name: pkg.name,
 				version: pkg.version
 			});
 
 			cb(null, app);
 		},
+		function (app, cb) {
+			app.use(function (req, res, next) {
+				req.secure = true;
+				console.log("Hola", req.secure);
+				next();
+			});
+			cb(null, app);
+		},
+		function (app, cb) {
+			app.use(helmet.hsts({
+			  maxAge: 7776000000,
+			  includeSubdomains: true
+			}));
 
+			cb(null, app);
+		},
 		function (app, cb) {
 			app.get('/', function (req, res, next) {
 				console.log("Hola mundo!");
