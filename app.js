@@ -12,7 +12,6 @@
    , constants = require('constants')
    , async = require('async')
    , restify = require('restify')
-  , helmet = require('helmet')
    , pkg = require(__dirname + '/package.json')
    , fs = require('fs')
  ;
@@ -52,8 +51,9 @@ async.waterfall(
 			console.log("Initializing server...");
 
 			var app = restify.createServer({
-                certificate: fs.readFileSync(__dirname + '/ssl/certs/royal-films.crt'),
-                key: fs.readFileSync(__dirname + '/ssl/private/royal-films.key'),
+				ca: fs.readFileSync(__dirname + '/ssl/CA/comodoro-ca.crt', 'utf-8'),
+                certificate: fs.readFileSync(__dirname + '/ssl/certs/royal-films.crt', 'utf-8'),
+                key: fs.readFileSync(__dirname + '/ssl/private/royal-films.key', 'utf-8'),
 				name: pkg.name,
 				version: pkg.version
 			});
@@ -66,14 +66,6 @@ async.waterfall(
 				console.log("Hola", req.secure);
 				next();
 			});
-			cb(null, app);
-		},
-		function (app, cb) {
-			app.use(helmet.hsts({
-			  maxAge: 7776000000,
-			  includeSubdomains: true
-			}));
-
 			cb(null, app);
 		},
 		function (app, cb) {
